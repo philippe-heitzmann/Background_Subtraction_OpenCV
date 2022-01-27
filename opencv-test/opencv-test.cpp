@@ -45,14 +45,34 @@
 #include <opencv2/videoio.hpp>
 #include <opencv2/highgui.hpp>
 #include <opencv2/video.hpp>
+#include <string>
+
+#include <type_traits>
+#include <typeinfo>
+
+#/*   include <cxxabi.h>
+#*///endif
+
+//https://stackoverflow.com/questions/81870/is-it-possible-to-print-a-variables-type-in-standard-c
+#include <memory>
+#include <string>
+#include <cstdlib>
+#include <typeinfo>
+
+
+#include "opencv2/core/core.hpp"
+#include "opencv2/imgproc/imgproc.hpp"
+#include "opencv2/highgui/highgui.hpp"
+
+
 
 using namespace cv;
 using namespace std;
 
 const char* params
 = "{ help h         |           | Print usage }"
-"{ input          | vtest.avi | Path to a video or a sequence of image }"
-"{ algo           | MOG2      | Background subtraction method (KNN, MOG2) }";
+"{ input          | department_store_pedestrian_traffic.mp4 | Path to a video or a sequence of image }"
+"{ algo           | KNN      | Background subtraction method (KNN, MOG2) }";
 
 int main(int argc, char* argv[])
 {
@@ -83,7 +103,8 @@ int main(int argc, char* argv[])
     }
     //! [capture]
 
-    Mat frame, fgMask;
+    Mat frame, fgMask, outputfgMask;
+
     while (true) {
         capture >> frame;
         if (frame.empty())
@@ -102,14 +123,41 @@ int main(int argc, char* argv[])
         ss << capture.get(CAP_PROP_POS_FRAMES);
         string frameNumberString = ss.str();
         putText(frame, frameNumberString.c_str(), cv::Point(15, 15),
-            FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0));
+            FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(100, 0, 0));
         //! [display_frame_number]
 
         //! [show]
         //show the current frame and the fg masks
         imshow("Frame", frame);
         imshow("FG Mask", fgMask);
+
+        //https://stackoverflow.com/questions/8449378/finding-contours-in-opencv
+        //std::cout << typeid(fgMask).name() << '\n';
+        cv::threshold(fgMask, outputfgMask, 128, 255, cv::THRESH_BINARY);
+
+        //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
+        std::vector<std::vector<cv::Point> > contours;
+        cv::Mat contourOutput = outputfgMask.clone();
+        cv::findContours(contourOutput, contours, cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
+
+        ////Draw the contours
+        cv::Mat contourImage(fgMask.size(), CV_8UC3, cv::Scalar(0, 0, 0));
+        cv::Scalar colors[3];
+        colors[0] = cv::Scalar(255, 0, 0);
+        colors[1] = cv::Scalar(0, 255, 0);
+        colors[2] = cv::Scalar(0, 0, 255);
+        for (size_t idx = 0; idx < contours.size(); idx++) {
+            cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
+        }
+
+        imshow("Contours", contourImage);
+        //imshow("Binarized Threshold", outputfgMask);
+        /*cvMoveWindow("Contours", 200, 0);
+        cv::waitKey(0);*/
+
         //! [show]
+        //string strMytestString("hello world");
+        //cout << strMytestString;
 
         //get the input from the keyboard
         int keyboard = waitKey(30);
