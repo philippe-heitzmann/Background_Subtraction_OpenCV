@@ -1,5 +1,5 @@
 ### Project overview:
-Implementing video background subtraction using OpenCV in C++
+Implementing video background subtraction using OpenCV in C++ 
 
 ### Sample Output:
 
