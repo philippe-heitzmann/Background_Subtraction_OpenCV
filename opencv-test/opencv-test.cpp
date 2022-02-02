@@ -71,8 +71,9 @@ using namespace std;
 
 const char* params
 = "{ help h         |           | Print usage }"
-"{ input          | department_store_pedestrian_traffic.mp4 | Path to a video or a sequence of image }"
-"{ algo           | KNN      | Background subtraction method (KNN, MOG2) }";
+"{ input          | vtest.avi | Path to a video or a sequence of image }"
+"{ algo           | MOG2      | Background subtraction method (KNN, MOG2) }";
+
 
 int main(int argc, char* argv[])
 {
@@ -131,38 +132,38 @@ int main(int argc, char* argv[])
         imshow("Frame", frame);
         imshow("FG Mask", fgMask);
 
-        //https://stackoverflow.com/questions/8449378/finding-contours-in-opencv
-        //std::cout << typeid(fgMask).name() << '\n';
-        cv::threshold(fgMask, outputfgMask, 128, 255, cv::THRESH_BINARY);
+        ////https://stackoverflow.com/questions/8449378/finding-contours-in-opencv
+        ////std::cout << typeid(fgMask).name() << '\n';
+        //cv::threshold(fgMask, outputfgMask, 128, 255, cv::THRESH_BINARY);
 
-        //Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
-        std::vector<std::vector<cv::Point> > contours;
-        cv::Mat contourOutput = outputfgMask.clone();
-        cv::findContours(contourOutput, contours, cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
+        ////Find the contours. Use the contourOutput Mat so the original image doesn't get overwritten
+        //std::vector<std::vector<cv::Point> > contours;
+        //cv::Mat contourOutput = outputfgMask.clone();
+        //cv::findContours(contourOutput, contours, cv::RETR_LIST, cv::CHAIN_APPROX_NONE);
 
-        ////Draw the contours
-        cv::Mat contourImage(fgMask.size(), CV_8UC3, cv::Scalar(0, 0, 0));
-        cv::Scalar colors[3];
-        colors[0] = cv::Scalar(255, 0, 0);
-        colors[1] = cv::Scalar(0, 255, 0);
-        colors[2] = cv::Scalar(0, 0, 255);
-        for (size_t idx = 0; idx < contours.size(); idx++) {
-            cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
-        }
+        //////Draw the contours
+        //cv::Mat contourImage(fgMask.size(), CV_8UC3, cv::Scalar(0, 0, 0));
+        //cv::Scalar colors[3];
+        //colors[0] = cv::Scalar(255, 0, 0);
+        //colors[1] = cv::Scalar(0, 255, 0);
+        //colors[2] = cv::Scalar(0, 0, 255);
+        //for (size_t idx = 0; idx < contours.size(); idx++) {
+        //    cv::drawContours(contourImage, contours, idx, colors[idx % 3]);
+        //}
 
-        imshow("Contours", contourImage);
-        //imshow("Binarized Threshold", outputfgMask);
-        /*cvMoveWindow("Contours", 200, 0);
-        cv::waitKey(0);*/
+        //imshow("Contours", contourImage);
+        ////imshow("Binarized Threshold", outputfgMask);
+        ///*cvMoveWindow("Contours", 200, 0);
+        //cv::waitKey(0);*/
 
-        //! [show]
-        //string strMytestString("hello world");
-        //cout << strMytestString;
+        ////! [show]
+        ////string strMytestString("hello world");
+        ////cout << strMytestString;
 
-        //get the input from the keyboard
-        int keyboard = waitKey(30);
-        if (keyboard == 'q' || keyboard == 27)
-            break;
+        ////get the input from the keyboard
+        //int keyboard = waitKey(30);
+        //if (keyboard == 'q' || keyboard == 27)
+        //    break;
     }
 
     return 0;
