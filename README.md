@@ -1,5 +1,5 @@
 ### Project overview:
-Implementing video background subtraction using OpenCV in C++ 
+Implementing video background subtraction using OpenCV C++ and Python methods 
 
 ### Sample Output:
 ![highway_driving_knn3_000026_0000037](https://user-images.githubusercontent.com/8759492/152627185-9d1ddee9-637e-40d3-8874-da77764c86aa.gif)
